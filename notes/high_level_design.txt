@@ -1,0 +1,41 @@
+=== colosseum ===
+
+== terminal interface ==
+	guten
+
+== universal chess interface ==
+	ucilib
+	
+== purpose ==
+	engine vs engine
+	engine vs self (similar to above)
+	engine vs human (not a priority)
+	tournament:
+		4 or more engines play in tournament style matches:
+			1.) qualifying matches (all qualify by default)
+			2.) bracket play
+	elo rating:
+		rates engine by playing it against other engines over and over again
+		can start with an existing elo rating
+
+== Model View Controller ==
+	model: 
+		chess position object (current state of the game)
+		forgelib
+
+	view:
+		terminal/console interface
+		guten
+
+	controller:
+		uci protocol
+		ucilib
+
+== Classes ==
+	Position
+		Board
+		Move
+			BoardSquare
+		
+	
+

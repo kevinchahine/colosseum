@@ -1,0 +1,3 @@
+[submodule "uci"]
+	path = uci
+	url = git@github.com:kevinchahine/uci.git
