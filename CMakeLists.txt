@@ -29,55 +29,19 @@ source_group(notes FILES ${NOTES})
 
 # --- LIBRARIES ---
 
-# --- Libraries (VCPKG) ---
-if (MSVC)
-	message(STATUS "\nVCPKG packages will be automatically linked to visual studio\n")
-else ()
-	# --- For VCPKG packages ---
-	#message(STATUS "\nCall cmake with: cmake .. -DCMAKE_TOOLCHAIN_FILE=/__path__/__to__/vcpkg/scripts/buildsystems/vcpkg.cmake")
+# --- GUTEN ---
 
-	# ----- BOOST -----
+add_subdirectory(guten/Guten)
 
-	message(STATUS "\n----- BOOST -----")
-	set(Boost_USE_STATIC_LIBS		OFF)
-	set(Boost_USE_MULTITHREADED		OFF)
-	set(Boost_USE_STATIC_RUNTIME	OFF)
-	set(DCMAKE_TOOLCHAIN_FILE="/media/kevin/barracuda/Code/libraries/vcpkg/scripts/buildsystems/vcpkg.cmake")
-	set(DCMAKE_PREFIX_PATH="/media/kevin/barracuda/Code/libraries/libtorch/libtorch-cxx11-abi-shared-with-deps-1.11.0+cu113/libtorch")
+target_link_libraries(${PROJECT_NAME} PUBLIC guten)
 
-	find_package(Boost REQUIRED COMPONENTS
-		#algorithm		# leave out header-only packages
-		#asio 			# leave out header-only packages
-		#process		# leave out header-only packages
-		system 
-		filesystem 
-		regex
-		thread
-	)
-
-	include_directories(${Boost_INCLUDE_DIRS})
-	link_directories(${Boost_LIBRARY_DIRS})
-
-	target_link_libraries(${PROJECT_NAME} PUBLIC
-		#Boost::algorithm
-		#Boost::asio
-		Boost::system
-		Boost::filesystem
-		Boost::regex
-		${Boost_LIBRARIES}	# TODO: do we need this
-	)
-
-	message(STATUS "Include dirs ${Boost_INCLUDE_DIRS}")
-	message(STATUS "Boost libraries ${Boost_LIBRARIES}")
-
-	target_include_directories(${PROJECT_NAME} PUBLIC
-		${Boost_INCLUDE_DIRS}
-	)
-endif (MSVC)
+target_include_directories(${PROJECT_NAME} PUBLIC guten)
 
 # --- UCILIB ---
 
-add_subdirectory(uci)
+add_subdirectory(ucilib)
 
-#target_link_libraries(${PROJECT_NAME} PUBLIC uci)
 target_link_libraries(${PROJECT_NAME} PUBLIC ucilib)
+
+target_include_directories(${PROJECT_NAME} PUBLIC ucilib)
+

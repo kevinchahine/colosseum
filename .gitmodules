@@ -1,3 +1,9 @@
 [submodule "uci"]
 	path = uci
 	url = git@github.com:kevinchahine/uci.git
+[submodule "ucilib"]
+	path = ucilib
+	url = git@github.com:kevinchahine/ucilib.git
+[submodule "guten"]
+	path = guten
+	url = git@github.com:kevinchahine/guten.git
