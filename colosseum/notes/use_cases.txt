@@ -1,0 +1,24 @@
+=== Colosseum ===
+
+== Use Cases ==
+
+Single Game:
+	simple engine vs engine gameplay
+	
+Engine vs Human (not a priority):
+
+Human vs Human (not a priority):
+
+Tournament style gameplay:
+	multiple engines
+	multiple games in pool play
+	bracket style elimination play
+
+ELO scoring:
+	multiple engines
+	each with a starting elo rating (or defualt) (700 I think??)
+	rating is focused on one engine
+	one engine plays the others multiple times. elo is re-evaluated after each game.
+	game play stops when rating converges
+
+

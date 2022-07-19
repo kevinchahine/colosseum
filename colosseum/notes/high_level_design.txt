@@ -20,16 +20,14 @@
 
 == Model View Controller ==
 	model: 
-		chess position object (current state of the game)
-		forgelib
+		chess position object (forgelib)
 
 	view:
-		terminal/console interface
-		guten
+		terminal/console interface (guten)
 
 	controller:
-		uci protocol
-		ucilib
+		uci protocol (ucilib)
+		user interface (cin, cout)
 
 == Classes ==
 	Position
