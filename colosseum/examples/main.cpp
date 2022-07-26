@@ -14,8 +14,6 @@ int main(int argc, const char ** argv)
 	}
 
 	engine_vs_engine();
-
-	
 	
 	return 0;
 }

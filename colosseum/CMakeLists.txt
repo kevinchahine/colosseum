@@ -1,3 +1,5 @@
+# --- Colosseum App ---
+
 cmake_minimum_required(VERSION 3.21)
 
 set(PROJECT_NAME colosseum)
@@ -37,3 +39,4 @@ target_link_libraries(${PROJECT_NAME} PUBLIC guten)
 target_link_libraries(${PROJECT_NAME} PUBLIC ucilib)
 # target_include_directories(${PROJECT_NAME} PUBLIC ucilib)
 
+target_link_libraries(${PROJECT_NAME} PUBLIC forgelib)
