@@ -28,8 +28,8 @@ void engine_vs_engine()
 	cout << engine1_path << endl
 		<< engine2_path << endl;
 	
-	uci::UciClient engine1(engine1_path.string());
-	uci::UciClient engine2(engine2_path.string());
+	uci::UciClient engine1(engine1_path);
+	uci::UciClient engine2(engine2_path);
 	
 	cout << "Setting up " << engine1_path << "..." << endl;
 	engine1.send_uci();
@@ -56,8 +56,6 @@ void engine_vs_engine()
 	uci::go go_param;
 	uci::Command cmd;
 	
-	vector<forge::Move> moves;
-
 	guten::boards::CheckerBoard cb = pos.board().getCheckerBoard();
 	cb.print();
 
