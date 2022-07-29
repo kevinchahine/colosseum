@@ -4,12 +4,17 @@
 #include <guten/draw/DrawFunctions.h>
 
 #include <string>
+#include <sstream>
 
 using namespace std;
 
 namespace views
 {
-	guten::core::Matrix drawBlackPanel(const TextView& view, const guten::Size & size, const forge::Position & position) 
+	guten::core::Matrix drawBlackPanel(
+		const TextView& view, 
+		const guten::Size & size, 
+		const forge::Position & position,
+		const forge::clock & clock) 
 	{
 		guten::core::Matrix panel{ size };
 
@@ -17,7 +22,7 @@ namespace views
 
 		guten::draw::putText(panel, "Black", guten::Point{ 2, 2 });
 
-		// --- Captured Pieces ---
+		// --- Pieces ---
 		const forge::Board& b = position.board();
 		
 		forge::BitBoard ourQueens = b.queens() & b.blacks();
@@ -35,6 +40,13 @@ namespace views
 		guten::draw::putText(panel, string(ourBishops.count(), 'B'),	guten::Point{ 6, 3 }, color);
 		guten::draw::putText(panel, string(ourKnights.count(), 'N'),	guten::Point{ 7, 3 }, color);
 		guten::draw::putText(panel, string(ourPawns.count(), 'P'),		guten::Point{ 8, 3 }, color);
+
+		// --- Clock ---
+
+		stringstream ss;
+		ss << clock.get_black_timer();
+
+		guten::draw::putText(panel, ss.str(), guten::Point{ 10, 3 });
 
 		return panel;
 	}
@@ -69,7 +81,7 @@ namespace views
 
 		// --- Draw Left Side Panel ---
 
-		guten::core::Matrix blacksPanel = drawBlackPanel(*this, guten::Size{ boardMat.nRows() / 2, 20 }, position);
+		guten::core::Matrix blacksPanel = drawBlackPanel(*this, guten::Size{ boardMat.nRows() / 2, 20 }, position, _clock);
 
 		guten::core::Matrix whitesPanel(boardMat.nRows() / 2, 20);
 		guten::draw::putText(whitesPanel, "White", guten::Point{ 2, 2 });

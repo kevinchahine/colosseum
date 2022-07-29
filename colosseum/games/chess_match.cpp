@@ -53,6 +53,18 @@ namespace games
 
 	void ChessMatch::play(const uci::go& whites_params, const uci::go& blacks_params)
 	{
+		// --- Clock ---
+
+		_clock.synchronize(
+			chrono::milliseconds(whites_params.wtime.value_or(22)),
+			chrono::milliseconds(blacks_params.btime.value_or(22)),
+			chrono::milliseconds(whites_params.winc.value_or(22)),
+			chrono::milliseconds(blacks_params.binc.value_or(22))
+		);
+
+		cout << "clock: " << _clock << endl;
+		cin.get();
+
 		forge::Position position;
 		position.setupNewGame();
 
@@ -63,18 +75,24 @@ namespace games
 		{
 			// --- 1.) Who's turn is it? ---
 			uci::UciClient& currEngine = (position.isWhitesTurn() ? _whiteEngine : _blackEngine);
-			const uci::go& currGo = (position.isWhitesTurn() ? whites_params : blacks_params);
-			
+			uci::go currGo = (position.isWhitesTurn() ? whites_params : blacks_params);
+
+			// --- Set clock ---
+			currGo.winc = _clock.get_whites_increment().count();
+			currGo.wtime = chrono::duration_cast<chrono::milliseconds>(_clock.get_white_timer().expires_from_now()).count();
+			currGo.binc = _clock.get_blacks_increment().count();
+			currGo.btime = chrono::duration_cast<chrono::milliseconds>(_clock.get_black_timer().expires_from_now()).count();
+
 			cerr << currEngine.engine_name() << "'s turn...";
+
+			_clock.resume();
 
 			currEngine.send_position(position.toFEN());
 			currEngine.send_go(currGo);
 
-			_clock.click();
-
 			const uci::Command & cmd = currEngine.recv_until_bestmove();
 
-			// TODO: ADD CLOCK SOMEWHERE
+			_clock.stop();
 
 			if (cmd.is_bestmove()) {
 				forge::Move bestmove = cmd.at(1);
@@ -95,6 +113,7 @@ namespace games
 
 				this->_viewPtr->highlight(bestmove.from());
 				this->_viewPtr->highlight(bestmove.to());
+				this->_clock = _clock;
 				this->_viewPtr->show(position);
 			}
 			else {

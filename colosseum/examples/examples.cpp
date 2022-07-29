@@ -148,6 +148,10 @@ void chess_match()
 
 	uci::go goParams;
 	goParams.movetime = 3'000;
+	goParams.wtime = chrono::duration_cast<chrono::milliseconds>(chrono::minutes(5)).count();
+	goParams.winc = chrono::duration_cast<chrono::milliseconds>(chrono::seconds(5)).count();
+	goParams.btime = chrono::duration_cast<chrono::milliseconds>(chrono::minutes(5)).count();
+	goParams.binc = chrono::duration_cast<chrono::milliseconds>(chrono::seconds(5)).count();
 
 	match.play(goParams);
 }
