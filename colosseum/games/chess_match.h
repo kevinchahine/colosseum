@@ -17,6 +17,7 @@
 #include <forge/core/Move.h>
 #include <forge/core/game_history.h>
 #include <forge/time/clock.h>
+#include <forge/core/GameState.h>
 
 namespace games
 {
@@ -41,13 +42,17 @@ namespace games
 		template<class VIEW_T>
 		void makeView();
 
+		std::unique_ptr<views::ViewBase>& viewPtr() { return _viewPtr; }
+		const std::unique_ptr<views::ViewBase>& viewPtr() const { return _viewPtr; }
+
 		// Plays a game between white and black engines. 
 		// Search parameters of each engine can be controlled using the uci::go parameters
-		void play(const uci::go& whitesParams, const uci::go& blacksParams);
+		// TODO: Return GameState
+		forge::GameState play(const uci::go& whitesParams, const uci::go& blacksParams);
 
 		// Plays a game between white and black engines. 
 		// Search parameters of both engines can be controlled using the uci::go parameters
-		void play(const uci::go& params = uci::go());
+		forge::GameState play(const uci::go& params = uci::go());
 
 	private:
 		uci::UciClient _whiteEngine;

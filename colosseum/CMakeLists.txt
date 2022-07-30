@@ -17,10 +17,23 @@ set(GAMES
 	games/chess_match.h  
 	games/chess_tournament.cpp  
 	games/chess_tournament.h
+	games/round_robin.cpp
+	games/round_robin.h
 )
 
 set(NOTES
 	notes/high_level_design.txt
+	notes/use_cases.txt
+	notes/player.txt
+)
+
+set(SOURCE
+	source/elo_rating.cpp
+	source/elo_rating.h
+	source/globals.cpp
+	source/globals.h
+	source/player.cpp
+	source/player.h
 )
 
 set(VIEWS
@@ -37,6 +50,7 @@ add_executable(${PROJECT_NAME}
 	${GAMES}
 	${EXAMPLES}
 	${NOTES}
+	${SOURCE}
 	${VIEWS}
 )
 
@@ -49,6 +63,7 @@ set(VS_STARTUP_PROJECT ${PROJECT_NAME})
 source_group(games FILES ${GAMES})
 source_group(examples FILES ${EXAMPLES})
 source_group(notes FILES ${NOTES})
+source_group(source FILES ${SOURCE})
 source_group(views FILES ${VIEWS})
 
 # --- LIBRARIES ---

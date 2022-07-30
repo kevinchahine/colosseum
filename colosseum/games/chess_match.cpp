@@ -51,8 +51,10 @@ namespace games
 		_blackEngine.recv_until_readyok();
 	}
 
-	void ChessMatch::play(const uci::go& whites_params, const uci::go& blacks_params)
+	forge::GameState ChessMatch::play(const uci::go& whites_params, const uci::go& blacks_params)
 	{
+		forge::GameState state;
+
 		// --- Clock ---
 
 		_clock.synchronize(
@@ -61,9 +63,6 @@ namespace games
 			chrono::milliseconds(whites_params.winc.value_or(22)),
 			chrono::milliseconds(blacks_params.binc.value_or(22))
 		);
-
-		cout << "clock: " << _clock << endl;
-		cin.get();
 
 		forge::Position position;
 		position.setupNewGame();
@@ -78,12 +77,10 @@ namespace games
 			uci::go currGo = (position.isWhitesTurn() ? whites_params : blacks_params);
 
 			// --- Set clock ---
-			currGo.winc = _clock.get_whites_increment().count();
-			currGo.wtime = chrono::duration_cast<chrono::milliseconds>(_clock.get_white_timer().expires_from_now()).count();
-			currGo.binc = _clock.get_blacks_increment().count();
-			currGo.btime = chrono::duration_cast<chrono::milliseconds>(_clock.get_black_timer().expires_from_now()).count();
-
-			cerr << currEngine.engine_name() << "'s turn...";
+			//currGo.winc = _clock.get_whites_increment().count();
+			//currGo.wtime = chrono::duration_cast<chrono::milliseconds>(_clock.get_white_timer().expires_from_now()).count();
+			//currGo.binc = _clock.get_blacks_increment().count();
+			//currGo.btime = chrono::duration_cast<chrono::milliseconds>(_clock.get_black_timer().expires_from_now()).count();
 
 			_clock.resume();
 
@@ -91,17 +88,16 @@ namespace games
 			currEngine.send_go(currGo);
 
 			const uci::Command & cmd = currEngine.recv_until_bestmove();
+			cout << ".";
 
 			_clock.stop();
 
 			if (cmd.is_bestmove()) {
 				forge::Move bestmove = cmd.at(1);
 
-				cout << "\tBest move is: " << bestmove << endl;
-
 				// --- Validate move. Make sure its legal. ---
 				if (!isMoveLegal(position, bestmove)) {
-					cout << "Move is illegal!!!" << endl;
+					cout << termcolor::red << "Move is illegal!!!" << endl;
 
 					break;
 				}
@@ -121,20 +117,18 @@ namespace games
 			}
 
 			// --- Is it game over yet? ---
-			forge::GameState state;
 			state(_history);
 
-			cout << state << endl;
 			if (state.isGameOver()) {
-				cout << state << endl;
-
 				break;
 			}
 		} // while (true)	
+
+		return state;
 	}
 
-	void ChessMatch::play(const uci::go& params)
+	forge::GameState ChessMatch::play(const uci::go& params)
 	{
-		this->play(params, params);
+		return this->play(params, params);
 	}
 } // namespace games

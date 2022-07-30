@@ -9,6 +9,8 @@ namespace views
 	public:
 		virtual void show(const forge::Position& position) override { /* no-op */ }
 
+		virtual std::unique_ptr<ViewBase> clone() const override { return std::make_unique<NoView>(*this); };
+
 	private:
 
 	};

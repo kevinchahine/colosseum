@@ -15,7 +15,9 @@ int main(int argc, const char ** argv)
 	}
 	
 	//engine_vs_engine();
-	chess_match();
+	//chess_match();
+	//elo_rating();
+	round_robin();
 
 	return 0;
 }

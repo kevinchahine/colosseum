@@ -14,6 +14,8 @@ namespace views
 		// Clears highlighs 
 		virtual void show(const forge::Position& position) = 0;
 
+		virtual std::unique_ptr<ViewBase> clone() const = 0;
+
 		void highlight(const forge::BoardSquare& square);
 		void highlight(const std::bitset<64>& squares);
 		void highlight(const forge::BitBoard& squares);

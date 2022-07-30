@@ -1,7 +1,10 @@
 #include "examples.h"
 #include "games/games.hpp"
 #include "views/views.hpp"
+#include "source/elo_rating.h"
+#include "source/globals.h"
 
+#include <algorithm>
 #include <iostream>
 
 #include <boost/filesystem/path.hpp>
@@ -139,6 +142,42 @@ void engine_vs_engine()
 	}
 }
 
+void elo_rating()
+{
+	EloRating player1;
+	EloRating player2;
+	EloRating player3;
+
+	cout << player1 << endl
+		<< player2 << endl
+		<< player3 << endl
+		<< endl;
+
+	// --- 1 beats 2 ---
+	EloRating::update(player1, 1.0, player2, 0.0);
+
+	cout << player1 << endl
+		<< player2 << endl
+		<< player3 << endl
+		<< endl;
+
+	// --- 2 beats 3 ---
+	EloRating::update(player2, 1.0, player3, 0.0);
+
+	cout << player1 << endl
+		<< player2 << endl
+		<< player3 << endl
+		<< endl;
+
+	// --- 1 beats 3 ---
+	EloRating::update(player1, 1.0, player3, 0.0);
+
+	cout << player1 << endl
+		<< player2 << endl
+		<< player3 << endl
+		<< endl;
+}
+
 void chess_match()
 {
 	games::ChessMatch match;
@@ -155,3 +194,24 @@ void chess_match()
 
 	match.play(goParams);
 }
+
+void round_robin()
+{
+	RoundRobin tournament;
+
+	tournament.setNGames(2);
+	
+	uci::go go;
+	go.movetime = 10;	//  msec search time
+	tournament.go() = go;
+
+	for (const auto& path : globals::enginePaths) {
+		tournament.players().emplace_back(path);
+	}
+
+	tournament.makeView<views::NoView>();
+	//tournament.makeView<views::TextView>();
+
+	tournament.play();
+}
+
