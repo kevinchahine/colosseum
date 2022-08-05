@@ -88,7 +88,6 @@ namespace games
 			currEngine.send_go(currGo);
 
 			const uci::Command & cmd = currEngine.recv_until_bestmove();
-			cout << ".";
 
 			_clock.stop();
 
@@ -97,7 +96,9 @@ namespace games
 
 				// --- Validate move. Make sure its legal. ---
 				if (!isMoveLegal(position, bestmove)) {
-					cout << termcolor::red << "Move is illegal!!!" << endl;
+					cout << termcolor::red << "Move is illegal!!!" << termcolor::white << endl;
+
+					state(_history);
 
 					break;
 				}

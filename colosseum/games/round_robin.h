@@ -22,8 +22,8 @@ public:
 	std::vector<Player>& players() { return _players; }
 	const std::vector<Player>& players() const { return _players; }
 
-	void setNGames(int nGames) { _nGames = nGames; }
-	int getNGames() const { return _nGames; }
+	void setNRounds(int nGames) { _nRounds = nGames; }
+	int getNRounds() const { return _nRounds; }
 
 	template<class VIEW_T>
 	void makeView()
@@ -35,9 +35,25 @@ public:
 
 	void play();
 
+	boost::property_tree::ptree serialize() const;
+
+	void parse(const boost::property_tree::ptree& tree);
+
+	void save();
+
+	void load();
+
 private:
 	uci::go _go;
+	int _nRounds;			// How many games will each engine play.
 	std::vector<Player> _players;
-	int _nGames;
 	std::unique_ptr<views::ViewBase> _viewPtr;
+
+	// --- Game Progress ---
+	size_t roundIndex = 0;	// which round are we playing?
+	size_t whiteIndex = 0;	// which engine is playing as white?
+	size_t blackIndex = 0;	// which engine is playing as black?
+
+public:
+	boost::filesystem::path	saveFile;
 };

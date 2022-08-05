@@ -199,19 +199,27 @@ void round_robin()
 {
 	RoundRobin tournament;
 
-	tournament.setNGames(2);
-	
-	uci::go go;
-	go.movetime = 10;	//  msec search time
-	tournament.go() = go;
+	// TODO: Make a view which prints info instead of a chess board
+	tournament.makeView<views::NoView>();
+	//tournament.makeView<views::TextView>();
 
+	tournament.saveFile = "roundRobin.json";
+
+	//tournament.load();
+
+	tournament.setNRounds(100);
+	uci::go go;
+	go.movetime = 1000;	//  msec search time
+	//go.btime = 1000;
+	//go.wtime = 1000;
+	//go.depth = 22;
+	tournament.go() = go;
 	for (const auto& path : globals::enginePaths) {
 		tournament.players().emplace_back(path);
 	}
 
-	tournament.makeView<views::NoView>();
-	//tournament.makeView<views::TextView>();
-
 	tournament.play();
+
+	tournament.save();
 }
 

@@ -1,13 +1,20 @@
 #pragma once
 
 #include <iostream>
+#include <vector>
 #include <math.h>
 
 #include "forge/core/GameState.h"
 
+#include <boost/property_tree/ptree_fwd.hpp>
+
 class EloRating
 {
 public:
+	boost::property_tree::ptree serialize() const;
+
+	void parse(const boost::property_tree::ptree& tree);
+
 	// Let scoreA and scoreB denote the result of a game played
 	// 1.0 means win
 	// 0.5 means draw
@@ -23,7 +30,5 @@ public:
 		return os;
 	}
 
-private:
 	double rating = 1400.0;
 };
-

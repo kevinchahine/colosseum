@@ -1,6 +1,30 @@
 #include "elo_rating.h"
 
+#include <boost/property_tree/ptree.hpp>
+
 using namespace std;
+
+boost::property_tree::ptree EloRating::serialize() const
+{
+	boost::property_tree::ptree tree;
+	
+	tree.put("", rating);
+
+	return tree;
+}
+
+void EloRating::parse(const boost::property_tree::ptree& tree)
+{
+	boost::optional<double> op = tree.get_optional<double>("rating");
+
+	if (op.has_value()) {
+		rating = op.value();
+	}
+	else {
+		cout << "Error: property_tree does not have an entry for 'rating'" << endl;
+		rating = 1400;
+	}
+}
 
 void EloRating::update(
 	EloRating& playerA, 
@@ -41,7 +65,7 @@ void EloRating::update(EloRating& whitePlayer, EloRating& blackPlayer, const for
 	}
 	else {
 		// somethings wrong
-		cout << "Error: game state is not win loss draw" << endl;
+		cout << "Error: game state is not win loss draw. Elo ratings will not be updated." << endl;
 
 		return;
 	}
@@ -51,4 +75,3 @@ void EloRating::update(EloRating& whitePlayer, EloRating& blackPlayer, const for
 		blackPlayer, blackScore,
 		kFactor);
 }
-

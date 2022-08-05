@@ -30,6 +30,8 @@ set(NOTES
 set(SOURCE
 	source/elo_rating.cpp
 	source/elo_rating.h
+	source/elo_rating_list.cpp
+	source/elo_rating_list.h
 	source/globals.cpp
 	source/globals.h
 	source/player.cpp
