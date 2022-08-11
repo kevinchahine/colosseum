@@ -10,7 +10,7 @@ using namespace std;
 
 //	Inputs:
 //		- Player:
-//			- engine (as a UciClient or filepath to the engine application)
+//			- engine (as a engine or filepath to the engine application)
 //			- rating 
 //			- record file (as a filepath)
 //		- nGamesPlayed (may times will each engine play each other engine?)
@@ -60,14 +60,16 @@ void RoundRobin::play()
 						<< gstate << endl
 						<< endl;
 
-					// --- Update Elo ---
-					whitePlayer.ratings().push_back(whitePlayer.currRating());
-					blackPlayer.ratings().push_back(blackPlayer.currRating());
+					if (gstate.isDraw() || gstate.whiteWins() || gstate.blackWins()) {
+						// --- Update Elo ---
+						whitePlayer.ratings().push_back(whitePlayer.currRating());
+						blackPlayer.ratings().push_back(blackPlayer.currRating());
 
-					EloRating::update(whitePlayer.currRating(), blackPlayer.currRating(), gstate);
-					cout << "=== Update Elo Ratings ===" << endl
-						<< match.whiteEngine().engine_name() << ": " << whitePlayer.currRating() << " --- "
-						<< match.blackEngine().engine_name() << ": " << blackPlayer.currRating() << endl;
+						EloRating::update(whitePlayer.currRating(), blackPlayer.currRating(), gstate);
+						cout << "=== Update Elo Ratings ===" << endl
+							<< match.whiteEngine().engine_name() << ": " << whitePlayer.currRating() << " --- "
+							<< match.blackEngine().engine_name() << ": " << blackPlayer.currRating() << endl;
+					}
 
 					// --- Save progress ---
 					this->save();

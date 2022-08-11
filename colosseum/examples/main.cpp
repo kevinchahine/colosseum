@@ -21,10 +21,10 @@ int main(int argc, const char** argv)
 		cout << '\t' << argv[i] << endl;
 	}
 
-	//engine_vs_engine();
+	engine_vs_engine();
 	//chess_match();
 	//elo_rating();
-	round_robin();
+	//round_robin();
 	
 	return 0;
 }

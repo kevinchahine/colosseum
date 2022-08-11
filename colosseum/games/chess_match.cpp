@@ -73,7 +73,7 @@ namespace games
 		while (true)
 		{
 			// --- 1.) Who's turn is it? ---
-			uci::UciClient& currEngine = (position.isWhitesTurn() ? _whiteEngine : _blackEngine);
+			uci::engine& currEngine = (position.isWhitesTurn() ? _whiteEngine : _blackEngine);
 			uci::go currGo = (position.isWhitesTurn() ? whites_params : blacks_params);
 
 			// --- Set clock ---
@@ -96,7 +96,7 @@ namespace games
 
 				// --- Validate move. Make sure its legal. ---
 				if (!isMoveLegal(position, bestmove)) {
-					cout << termcolor::red << "Move is illegal!!!" << termcolor::white << endl;
+					cout << termcolor::red << "Move: " << bestmove << " is illegal!!!" << termcolor::white << endl;
 
 					state(_history);
 

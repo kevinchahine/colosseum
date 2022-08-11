@@ -11,7 +11,7 @@
 
 #include <boost/filesystem/path.hpp>
 
-#include <uci/uci_client.h>
+#include <uci/engine.h>
 #include <uci/go.h>
 
 #include <forge/core/Move.h>
@@ -32,12 +32,12 @@ namespace games
 		ChessMatch& operator=(ChessMatch&&) noexcept = default;
 
 		void launchWhiteEngine(const boost::filesystem::path& filename);
-		const uci::UciClient& whiteEngine() const { return _whiteEngine; }
-		uci::UciClient& whiteEngine() { return _whiteEngine; }
+		const uci::engine& whiteEngine() const { return _whiteEngine; }
+		uci::engine& whiteEngine() { return _whiteEngine; }
 
 		void launchBlackEngine(const boost::filesystem::path& filename);
-		const uci::UciClient& blackEngine() const { return _blackEngine; }
-		uci::UciClient& blackEngine() { return _blackEngine; }
+		const uci::engine& blackEngine() const { return _blackEngine; }
+		uci::engine& blackEngine() { return _blackEngine; }
 
 		template<class VIEW_T>
 		void makeView();
@@ -55,8 +55,8 @@ namespace games
 		forge::GameState play(const uci::go& params = uci::go());
 
 	private:
-		uci::UciClient _whiteEngine;
-		uci::UciClient _blackEngine;
+		uci::engine _whiteEngine;
+		uci::engine _blackEngine;
 
 		forge::game_history _history;
 

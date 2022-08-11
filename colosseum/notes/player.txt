@@ -1,8 +1,8 @@
 === class Player ===
 
-- engine (as a UciClient)
+- engine (as a engine)
 - rating (elo rating, saved in 'recordFile'
 - history (history of recorded games played by engine) (optional)
 - recordFile (as a filepath to a json or xml file)
 
-+ setEngine(as a UciClient or filepath to the engine application)
++ setEngine(as a engine or filepath to the engine application)

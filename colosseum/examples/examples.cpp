@@ -14,7 +14,7 @@
 #include <guten/boards/CheckerBoard.h>
 
 #include <uci/commands/command.h>
-#include <uci/uci_client.h>
+#include <uci/engine.h>
 
 using namespace std;
 
@@ -42,8 +42,8 @@ void engine_vs_engine()
 	cout << engine1_path << endl
 		<< engine2_path << endl;
 
-	uci::UciClient engine1(engine1_path);
-	uci::UciClient engine2(engine2_path);
+	uci::engine engine1(engine1_path);
+	uci::engine engine2(engine2_path);
 
 	cout << "Setting up " << engine1_path << "..." << endl;
 	engine1.send_uci();
@@ -205,7 +205,7 @@ void round_robin()
 
 	tournament.saveFile = "roundRobin.json";
 
-	//tournament.load();
+	tournament.load();
 
 	tournament.setNRounds(100);
 	uci::go go;
@@ -213,10 +213,13 @@ void round_robin()
 	//go.btime = 1000;
 	//go.wtime = 1000;
 	//go.depth = 22;
-	tournament.go() = go;
-	for (const auto& path : globals::enginePaths) {
-		tournament.players().emplace_back(path);
-	}
+	// 
+	// !!! Do not call this and tournament.load() !!!
+	// Otherwise engines will be added more than once
+	//tournament.go() = go;
+	//for (const auto& path : globals::enginePaths) {
+	//	tournament.players().emplace_back(path);
+	//}
 
 	tournament.play();
 
