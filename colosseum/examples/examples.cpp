@@ -13,39 +13,27 @@
 
 #include <guten/boards/CheckerBoard.h>
 
-#include <uci/commands/command.h>
+#include <uci/commands/commands.hpp>
 #include <uci/engine.h>
 
 using namespace std;
 
-boost::filesystem::path whiteEnginePath =
-	//R"dil(/usr/games/stockfish)dil";
-	R"dil(C:\Users\kchah\Saved Games\stockfish_15\stockfish_15.exe)dil";
-
-boost::filesystem::path blackEnginePath =
-	//R"dil(/usr/games/ethereal-chess)dil";
-	R"dil(C:\Users\kchah\Saved Games\lc0\lc0.exe)dil";
-	//whiteEnginePath;	
+const boost::filesystem::path& whiteEnginePath = globals::stockfishPath;
+const boost::filesystem::path& blackEnginePath = globals::lc0Path;
 
 void engine_vs_engine()
 {
 	// 1.) --- Launch Each Engine ---
-	boost::filesystem::path engine1_path =
-		//R"dil(/usr/games/stockfish)dil";
-		R"dil(C:\Users\kchah\Saved Games\stockfish_15\stockfish_15.exe)dil";
+	boost::filesystem::path whiteEnginePath = globals::stockfishPath;
+	boost::filesystem::path blackEnginePath = globals::lc0Path;
 
-	boost::filesystem::path engine2_path =
-		//R"dil(/usr/games/ethereal-chess)dil";
-		R"dil(C:\Users\kchah\Saved Games\lc0\lc0.exe)dil";
-	//engine1_path;
+	cout << whiteEnginePath << endl
+		<< blackEnginePath << endl;
 
-	cout << engine1_path << endl
-		<< engine2_path << endl;
+	uci::engine engine1(whiteEnginePath);
+	uci::engine engine2(blackEnginePath);
 
-	uci::engine engine1(engine1_path);
-	uci::engine engine2(engine2_path);
-
-	cout << "Setting up " << engine1_path << "..." << endl;
+	cout << "Setting up " << whiteEnginePath << "..." << endl;
 	engine1.send_uci();
 	engine1.recv_until_uciok();
 	engine1.send_isready();
@@ -53,7 +41,7 @@ void engine_vs_engine()
 	engine1.send_ucinewgame();
 	cout << "done" << endl;
 
-	cout << "Setting up " << engine2_path << "..." << endl;
+	cout << "Setting up " << blackEnginePath << "..." << endl;
 	engine2.send_uci();
 	engine2.recv_until_uciok();
 	engine2.send_isready();
@@ -67,8 +55,8 @@ void engine_vs_engine()
 	vector<string> game_moves;
 	game_moves.reserve(50);
 
-	uci::go go_param;
-	uci::Command cmd;
+	uci::commands::go go_param;
+	uci::commands::command cmd;
 
 	guten::boards::CheckerBoard cb = pos.board().getCheckerBoard();
 	cb.print();
@@ -76,32 +64,29 @@ void engine_vs_engine()
 	while (true) {
 		cerr << "\t" << engine1.engine_name() << "'s turn...";
 
-		engine1.send_position(pos.toFEN());
-		//engine1.send_position("startpos", game_moves);
-		cout << "currpos ^^^:" << pos << endl;
+		uci::commands::position pos_cmd;
+		pos_cmd.pos = pos.toFEN();
+		engine1.send_position(pos_cmd);
 
 		go_param.movetime = 3'000;	// search for exactly 1'000 msec
 		engine1.send_go(go_param);
 
-		cmd = engine1.recv_until_bestmove();
+		uci::commands::bestmove best = engine1.recv_until_bestmove();
 		cout << "Best move command: " << cmd << endl;
 
-		if (cmd.is_bestmove()) {
-			forge::Move bestmove = cmd.at(1);
+		forge::Move bestmove = best.move;
 
-			cout << "\tBest move is: " << bestmove << endl;
+		cout << "\tBest move is: " << bestmove << endl;
 
-			game_moves.push_back(cmd.at(1));
+		game_moves.push_back(bestmove.toLAN());
 
-			pos.move<forge::pieces::Piece>(bestmove);
+		pos.move<forge::pieces::Piece>(bestmove);
 
+		{
 			guten::boards::CheckerBoard cb = pos.board().getCheckerBoard();
 			cb.highlight(bestmove.from().row(), bestmove.from().col());
 			cb.highlight(bestmove.to().row(), bestmove.to().col());
 			cb.print();
-		}
-		else {
-			cout << '\t' << "Error: bestmove not received: " << cmd << endl;
 		}
 
 		cout << "--------------------------------------------" << endl;
@@ -110,32 +95,29 @@ void engine_vs_engine()
 
 		cerr << "\t" << engine2.engine_name() << "'s turn...";
 
-		engine2.send_position(pos.toFEN());
-		//engine2.send_position("startpos", game_moves);
+		pos_cmd.pos = pos.toFEN();
+		engine2.send_position(pos_cmd);
 		cout << "currpos: " << pos << endl;
 
 		go_param.movetime = 3'000;	// search for exactly 1'000 msec
 		engine2.send_go(go_param);
 
-		cmd = engine2.recv_until_bestmove();
+		best = engine2.recv_until_bestmove();
 		cout << "Best move command: " << cmd << endl;
 
-		if (cmd.is_bestmove()) {
-			forge::Move bestmove = cmd.at(1);
+		bestmove = best.move;
 
-			cout << "\tBest move is: " << bestmove << endl;
+		cout << "\tBest move is: " << bestmove << endl;
 
-			game_moves.push_back(cmd.at(1));
+		game_moves.push_back(bestmove.toLAN());
 
-			pos.move<forge::pieces::Piece>(bestmove);
+		pos.move<forge::pieces::Piece>(bestmove);
 
+		{
 			guten::boards::CheckerBoard cb = pos.board().getCheckerBoard();
 			cb.highlight(bestmove.from().row(), bestmove.from().col());
 			cb.highlight(bestmove.to().row(), bestmove.to().col());
 			cb.print();
-		}
-		else {
-			cout << '\t' << "Error: bestmove not received: " << cmd << endl;
 		}
 
 		cout << "--------------------------------------------" << endl;
@@ -185,8 +167,8 @@ void chess_match()
 	match.launchBlackEngine(blackEnginePath);
 	match.makeView<views::TextView>();
 
-	uci::go goParams;
-	goParams.movetime = 3'000;
+	uci::commands::go goParams;
+	goParams.movetime = 1'000;
 	goParams.wtime = chrono::duration_cast<chrono::milliseconds>(chrono::minutes(5)).count();
 	goParams.winc = chrono::duration_cast<chrono::milliseconds>(chrono::seconds(5)).count();
 	goParams.btime = chrono::duration_cast<chrono::milliseconds>(chrono::minutes(5)).count();
@@ -199,27 +181,26 @@ void round_robin()
 {
 	RoundRobin tournament;
 
-	// TODO: Make a view which prints info instead of a chess board
 	tournament.makeView<views::NoView>();
 	//tournament.makeView<views::TextView>();
 
-	tournament.saveFile = "roundRobin.json";
+	tournament.saveFile = "C:/Users/kchah/Code/Projects/AI/colosseum/colosseum/data/roundRobin.json";
 
 	tournament.load();
 
 	tournament.setNRounds(100);
-	uci::go go;
+	uci::commands::go go;
 	go.movetime = 1000;	//  msec search time
-	//go.btime = 1000;
-	//go.wtime = 1000;
-	//go.depth = 22;
-	// 
-	// !!! Do not call this and tournament.load() !!!
+	go.btime = 1000;
+	go.wtime = 1000;
+	go.depth = 22;
+
+	// !!! Do not call this and tournament.load() together !!!
 	// Otherwise engines will be added more than once
-	//tournament.go() = go;
-	//for (const auto& path : globals::enginePaths) {
-	//	tournament.players().emplace_back(path);
-	//}
+	tournament.go() = go;
+	for (const auto& path : globals::enginePaths) {
+		tournament.players().emplace_back(path);
+	}
 
 	tournament.play();
 

@@ -12,7 +12,7 @@
 #include <boost/filesystem/path.hpp>
 
 #include <uci/engine.h>
-#include <uci/go.h>
+#include <uci/commands/go.h>
 
 #include <forge/core/Move.h>
 #include <forge/core/game_history.h>
@@ -46,13 +46,13 @@ namespace games
 		const std::unique_ptr<views::ViewBase>& viewPtr() const { return _viewPtr; }
 
 		// Plays a game between white and black engines. 
-		// Search parameters of each engine can be controlled using the uci::go parameters
+		// Search parameters of each engine can be controlled using the uci::commands::go parameters
 		// TODO: Return GameState
-		forge::GameState play(const uci::go& whitesParams, const uci::go& blacksParams);
+		forge::GameState play(const uci::commands::go& whitesParams, const uci::commands::go& blacksParams);
 
 		// Plays a game between white and black engines. 
-		// Search parameters of both engines can be controlled using the uci::go parameters
-		forge::GameState play(const uci::go& params = uci::go());
+		// Search parameters of both engines can be controlled using the uci::commands::go parameters
+		forge::GameState play(const uci::commands::go& params = uci::commands::go());
 
 	private:
 		uci::engine _whiteEngine;

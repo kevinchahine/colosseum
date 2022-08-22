@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include <uci/go.h>
+#include <uci/commands/go.h>
 
 #include "source/player.h"
 #include "views/view_base.h"
@@ -16,8 +16,8 @@
 class RoundRobin /* : public ???ChessTournament??? */
 {
 public:
-	uci::go& go() { return _go; }
-	const uci::go& go() const { return _go; }
+	uci::commands::go& go() { return _go; }
+	const uci::commands::go& go() const { return _go; }
 
 	std::vector<Player>& players() { return _players; }
 	const std::vector<Player>& players() const { return _players; }
@@ -44,7 +44,7 @@ public:
 	void load();
 
 private:
-	uci::go _go;
+	uci::commands::go _go;
 	int _nRounds;			// How many games will each engine play.
 	std::vector<Player> _players;
 	std::unique_ptr<views::ViewBase> _viewPtr;
@@ -55,5 +55,5 @@ private:
 	size_t blackIndex = 0;	// which engine is playing as black?
 
 public:
-	boost::filesystem::path	saveFile;
+	boost::filesystem::path	saveFile = DATA_DIR"roundRobin.json";
 };

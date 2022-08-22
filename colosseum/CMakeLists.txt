@@ -77,3 +77,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC guten)
 target_link_libraries(${PROJECT_NAME} PUBLIC ucilib)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC forgelib)
+
+# --- Preprocessor Macros ---
+add_definitions(-DDATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data/")

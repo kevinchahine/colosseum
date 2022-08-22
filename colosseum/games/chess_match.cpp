@@ -51,7 +51,7 @@ namespace games
 		_blackEngine.recv_until_readyok();
 	}
 
-	forge::GameState ChessMatch::play(const uci::go& whites_params, const uci::go& blacks_params)
+	forge::GameState ChessMatch::play(const uci::commands::go& whites_params, const uci::commands::go& blacks_params)
 	{
 		forge::GameState state;
 
@@ -74,7 +74,7 @@ namespace games
 		{
 			// --- 1.) Who's turn is it? ---
 			uci::engine& currEngine = (position.isWhitesTurn() ? _whiteEngine : _blackEngine);
-			uci::go currGo = (position.isWhitesTurn() ? whites_params : blacks_params);
+			uci::commands::go currGo = (position.isWhitesTurn() ? whites_params : blacks_params);
 
 			// --- Set clock ---
 			//currGo.winc = _clock.get_whites_increment().count();
@@ -84,38 +84,35 @@ namespace games
 
 			_clock.resume();
 
-			currEngine.send_position(position.toFEN());
+			uci::commands::position pos_cmd;
+			pos_cmd.pos = position.toFEN();
+			currEngine.send_position(pos_cmd);
 			currEngine.send_go(currGo);
 
-			const uci::Command & cmd = currEngine.recv_until_bestmove();
+			const uci::commands::bestmove& bestmove = currEngine.recv_until_bestmove();
 
 			_clock.stop();
 
-			if (cmd.is_bestmove()) {
-				forge::Move bestmove = cmd.at(1);
+			forge::Move move = bestmove.move;
 
-				// --- Validate move. Make sure its legal. ---
-				if (!isMoveLegal(position, bestmove)) {
-					cout << termcolor::red << "Move: " << bestmove << " is illegal!!!" << termcolor::white << endl;
+			// --- Validate move. Make sure its legal. ---
+			if (!isMoveLegal(position, move)) {
+				cout << termcolor::red << "Move: " << bestmove << " is illegal!!!" << termcolor::white << endl;
 
-					state(_history);
+				state(_history);
 
-					break;
-				}
-
-				// --- Apply move ---
-				position.move<forge::pieces::Piece>(bestmove);
-
-				_history.push_back(forge::MovePositionPair(cmd.at(1), position));
-
-				this->_viewPtr->highlight(bestmove.from());
-				this->_viewPtr->highlight(bestmove.to());
-				this->_clock = _clock;
-				this->_viewPtr->show(position);
+				break;
 			}
-			else {
-				cout << '\t' << "Error: bestmove not received: " << cmd << endl;
-			}
+
+			// --- Apply move ---
+			position.move<forge::pieces::Piece>(move);
+
+			_history.push_back(forge::MovePositionPair(move, position));
+
+			this->_viewPtr->highlight(move.from());
+			this->_viewPtr->highlight(move.to());
+			this->_clock = _clock;
+			this->_viewPtr->show(position);
 
 			// --- Is it game over yet? ---
 			state(_history);
@@ -128,7 +125,7 @@ namespace games
 		return state;
 	}
 
-	forge::GameState ChessMatch::play(const uci::go& params)
+	forge::GameState ChessMatch::play(const uci::commands::go& params)
 	{
 		return this->play(params, params);
 	}
