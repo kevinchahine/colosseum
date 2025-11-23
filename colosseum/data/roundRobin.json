@@ -935,6 +935,9 @@
                         },
                         {
                             "rating": "1550.5718049601712"
+                        },
+                        {
+                            "rating": "1556.3459353153301"
                         }
                     ]
                 }
@@ -6193,6 +6196,79 @@
                         },
                         {
                             "rating": "1393.9349086938626"
+                        },
+                        {
+                            "rating": "1388.1607783387037"
+                        }
+                    ]
+                }
+            },
+            {
+                "Player": {
+                    "enginePath": "C:\\Users\\kchah\\Saved Games\\komodo-13\\komodo-13_201fd6\\Windows\\komodo-13.02-64bit.exe",
+                    "ratings": [
+                        {
+                            "rating": "1400"
+                        }
+                    ]
+                }
+            },
+            {
+                "Player": {
+                    "enginePath": "C:\\Users\\kchah\\Saved Games\\SlowChess-2.9\\SlowChess-2.9\\slow64-avx2.exe",
+                    "ratings": [
+                        {
+                            "rating": "1400"
+                        }
+                    ]
+                }
+            },
+            {
+                "Player": {
+                    "enginePath": "C:\\Users\\kchah\\Saved Games\\stockfish_15\\stockfish_15.exe",
+                    "ratings": [
+                        {
+                            "rating": "1400"
+                        }
+                    ]
+                }
+            },
+            {
+                "Player": {
+                    "enginePath": "C:\\Users\\kchah\\Saved Games\\lc0\\lc0.exe",
+                    "ratings": [
+                        {
+                            "rating": "1400"
+                        }
+                    ]
+                }
+            },
+            {
+                "Player": {
+                    "enginePath": "C:\\Users\\kchah\\Saved Games\\Berserk-9_Windows\\berserk-9-x64.exe",
+                    "ratings": [
+                        {
+                            "rating": "1400"
+                        }
+                    ]
+                }
+            },
+            {
+                "Player": {
+                    "enginePath": "C:\\Users\\kchah\\Saved Games\\ethereal\\Ethereal-pext-avx2.exe",
+                    "ratings": [
+                        {
+                            "rating": "1400"
+                        }
+                    ]
+                }
+            },
+            {
+                "Player": {
+                    "enginePath": "C:\\Users\\kchah\\Saved Games\\koivisto\\Koivisto_8.0-x64-windows-avx2.exe",
+                    "ratings": [
+                        {
+                            "rating": "1400"
                         }
                     ]
                 }

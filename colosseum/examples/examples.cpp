@@ -18,7 +18,7 @@
 
 using namespace std;
 
-const boost::filesystem::path& whiteEnginePath = globals::stockfishPath;
+const boost::filesystem::path& whiteEnginePath = globals::forgePath;
 const boost::filesystem::path& blackEnginePath = globals::lc0Path;
 
 void engine_vs_engine()

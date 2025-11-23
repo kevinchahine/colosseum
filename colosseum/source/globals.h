@@ -7,6 +7,7 @@
 
 namespace globals
 {
+	extern const boost::filesystem::path forgePath;
 	extern const boost::filesystem::path stockfishPath;
 	extern const boost::filesystem::path lc0Path;
 	extern const boost::filesystem::path berserkPath;

@@ -4,6 +4,7 @@ using namespace std;
 
 namespace globals
 {
+	const boost::filesystem::path forgePath = R"dil(C:\Users\kchah\Code\Projects\AI\forge\build\forge\Debug\forge.exe)dil";
 	const boost::filesystem::path stockfishPath = R"dil(C:\Users\kchah\Saved Games\stockfish_15\stockfish_15.exe)dil";			
 	const boost::filesystem::path lc0Path = R"dil(C:\Users\kchah\Saved Games\lc0\lc0.exe)dil";									
 	const boost::filesystem::path berserkPath = R"dil(C:\Users\kchah\Saved Games\Berserk-9_Windows\berserk-9-x64.exe)dil";			
